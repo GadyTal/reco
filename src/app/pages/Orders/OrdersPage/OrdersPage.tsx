@@ -49,15 +49,15 @@ export const OrderPage = () => {
   const orderTablerowActions: RowAction<Item>[] = [
     {
       handler: (model) => {
-        updateItemStatus(ItemStatus.NotMissing, model.id);
+        updateItemStatus(
+          model.status === ItemStatus.Missing
+            ? ItemStatus.NotMissing
+            : ItemStatus.Missing,
+          model.id
+        );
       },
-      renderAction: (model) => <CheckIcon />,
-    },
-    {
-      handler: (model) => {
-        updateItemStatus(ItemStatus.Missing, model.id);
-      },
-      renderAction: (model) => <ClearIcon />,
+      renderAction: (model) =>
+        model.status === ItemStatus.Missing ? <CheckIcon /> : <ClearIcon />,
     },
   ];
 
