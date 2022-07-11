@@ -7,6 +7,7 @@ const App = () => {
   return (
     <>
       <Navbar />
+      {/* Mocking navigation */}
       <OrderPage />
     </>
   );

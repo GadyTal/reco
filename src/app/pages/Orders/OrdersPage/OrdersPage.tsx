@@ -1,7 +1,9 @@
 import React from "react";
-import CheckIcon from "@mui/icons-material/Check";
-import ClearIcon from "@mui/icons-material/Clear";
-import { getOrder, orderTableColumns } from "../OrdersPage/OrderPage.helpers";
+import {
+  getOrder,
+  getOrderTablerowActions,
+  orderTableColumns,
+} from "../OrdersPage/OrderPage.helpers";
 import {
   OrderPageContainer,
   TableContainer,
@@ -10,7 +12,6 @@ import { useEffect, useState } from "react";
 import { Order } from "../../../../models/Order";
 import { GenericTable } from "../../../components/common/GenericTable/GenericTable";
 import { TitleArea } from "../../../components/common/TitleArea/TitleArea";
-import { RowAction } from "../../../components/common/GenericTable/GenericTable.types";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { orderSlice } from "../../../../store/reducers/order/orderSlice";
 import { ItemStatus, Item } from "../../../../models/Item";
@@ -37,6 +38,7 @@ export const OrderPage = () => {
     setCurrentOrder(reduxOrder);
   }, [reduxOrder]);
 
+  // TODO - update item status action and move this logic
   const updateItemStatus = (itemStatus: ItemStatus, itemId: string) => {
     const updatedOrder = { ...(currentOrder as Order) };
     const index = currentOrder!.items.findIndex((item) => item.id == itemId);
@@ -45,21 +47,6 @@ export const OrderPage = () => {
     updatedOrder.items = updatedItems;
     dispatch(UpdateOrder(updatedOrder));
   };
-
-  const orderTablerowActions: RowAction<Item>[] = [
-    {
-      handler: (model) => {
-        updateItemStatus(
-          model.status === ItemStatus.Missing
-            ? ItemStatus.NotMissing
-            : ItemStatus.Missing,
-          model.id
-        );
-      },
-      renderAction: (model) =>
-        model.status === ItemStatus.Missing ? <CheckIcon /> : <ClearIcon />,
-    },
-  ];
 
   return (
     <OrderPageContainer>
@@ -70,7 +57,7 @@ export const OrderPage = () => {
             <GenericTable<Item>
               data={currentOrder.items}
               columns={orderTableColumns}
-              rowActions={orderTablerowActions}
+              rowActions={getOrderTablerowActions(updateItemStatus)}
             />
           </TableContainer>
         </>

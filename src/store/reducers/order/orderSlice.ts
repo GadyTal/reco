@@ -5,10 +5,6 @@ import {
 } from "@reduxjs/toolkit";
 import { Order } from "../../../models/Order";
 
-export interface OrderState {
-  orders: Record<string, Order>;
-}
-
 const entityAdapter = createEntityAdapter<Order>({
   selectId: (model) => model.id,
 });
@@ -23,7 +19,7 @@ export const orderSlice = createSlice({
     },
     SetAllOrders: (state, { payload }: PayloadAction<Order[]>) => {
       setAll(state, payload);
-    }
+    },
   },
 });
 
